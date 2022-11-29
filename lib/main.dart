@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_invite/splash.dart';
+import 'package:team_invite/view/splash.dart';
 
 import 'constants/color_constants.dart';
 
@@ -36,18 +36,26 @@ class MyApp extends StatelessWidget {
         bottomAppBarColor: colorCustom,
         scaffoldBackgroundColor: ColorConstants.backgroundColor,
         bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor:  ColorConstants.backgroundColor,
+          backgroundColor:  ColorConstants.blueColor,
         )
-
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: Colors.black,
+          ),
+          textTheme: TextTheme(
+            bodyText1: TextStyle(),
+            bodyText2: TextStyle(),
+          ).apply(
+            bodyColor: Colors.white,
+            displayColor: Colors.white,
+          ),
+        bottomAppBarColor:ColorConstants.darkBottomTheme,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: ColorConstants.darkBottomTheme
+        )
       ),
       home: Splash(),
     );

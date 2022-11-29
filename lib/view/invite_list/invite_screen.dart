@@ -3,8 +3,13 @@ import 'package:team_invite/constants/color_constants.dart';
 import 'package:team_invite/constants/text_decoration.dart';
 import 'package:team_invite/generated/assets.dart';
 
+import '../../controller/controller.dart';
+
+
 class InviteScreen extends StatefulWidget {
-  InviteScreen({Key? key}) : super(key: key);
+  String inviteEmail;
+  String role;
+  InviteScreen({Key? key,required this.inviteEmail, required this.role}) : super(key: key);
 
   @override
   State<InviteScreen> createState() => _InviteScreenState();
@@ -12,6 +17,7 @@ class InviteScreen extends StatefulWidget {
 
 class _InviteScreenState extends State<InviteScreen> {
   TextEditingController emailController = TextEditingController();
+  FocusNode emailFocus  = FocusNode();
 
   TextEditingController adminController = TextEditingController();
 
@@ -25,20 +31,24 @@ class _InviteScreenState extends State<InviteScreen> {
 
   _emailTextField() {
     return Container(
-      height: 60,
-      padding: EdgeInsets.only(
-        top: 14,
-      ),
+      height: 65,
+
       decoration: BoxDecoration(
           color: ColorConstants.textFieldBackground,
           borderRadius: BorderRadius.circular(10)),
       child: TextFormField(
+        onChanged: (v){
+          setState(() {});
+        },
+        focusNode: emailFocus,
         controller: emailController,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        contentPadding: EdgeInsets.only(top: 65,left: 10),
           filled: true,
-          fillColor: ColorConstants.textFieldBackground,
-          label: Text("Business email"),
+          fillColor:isDarkMode(context)?ColorConstants.darkBottomTheme: ColorConstants.textFieldBackground,
+          label: Container(
+              margin: EdgeInsets.only(top: (emailController.value.text.isNotEmpty||emailFocus.hasFocus)?50:0),
+              child: Text("Business email",style: TextDecoration.containerLabel,)),
           border: InputBorder.none,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -51,10 +61,15 @@ class _InviteScreenState extends State<InviteScreen> {
     );
   }
 
+
+
   @override
   void initState() {
-    adminController.text = _roles[0];
-    emailController.text = "thumb@marlo.online";
+    adminController.text = widget.role;
+    emailController.text = widget.inviteEmail;
+    emailFocus.addListener(() { setState(() {
+
+    });});
     // TODO: implement initState
     super.initState();
   }
@@ -66,7 +81,7 @@ class _InviteScreenState extends State<InviteScreen> {
       floatingActionButton: _floatingButton(),
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,9 +91,13 @@ class _InviteScreenState extends State<InviteScreen> {
                     },
                     splashFactory: NoSplash.splashFactory,
                     highlightColor: Colors.transparent,
-                    child: Image.asset(
-                      Assets.imagesBack,
-                      height: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        Assets.imagesBack,
+                        height: 20,
+                        color: isDarkMode(context)?Colors.white:Colors.black,
+                      ),
                     )),
                 SizedBox(
                   height: 20,
@@ -99,10 +118,10 @@ class _InviteScreenState extends State<InviteScreen> {
                    _bottomSheet();
                   },
                   child: Container(
-                    height: 60,
+                    height: 65,
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                        color: ColorConstants.textFieldBackground,
+                        color:isDarkMode(context)?ColorConstants.darkBottomTheme: ColorConstants.textFieldBackground,
                         borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,7 +187,7 @@ class _InviteScreenState extends State<InviteScreen> {
                       width: double.infinity,
                       padding: EdgeInsets.all(15),
                       decoration: BoxDecoration(
-                          color:adminController.value.text==_roles[i]?ColorConstants.lightTheme.withOpacity(.2): Colors.white,
+                          color:adminController.value.text==_roles[i]?ColorConstants.lightTheme.withOpacity(.2):isDarkMode(context)?ColorConstants.darkBottomTheme: Colors.white,
                           borderRadius: BorderRadius.circular(10)
                       ),
                       child: Text(_roles[i],style: TextDecoration.subHeader.copyWith(color:adminController.value.text==_roles[i]?ColorConstants.themeColor: ColorConstants.greyColor),),
@@ -180,25 +199,54 @@ class _InviteScreenState extends State<InviteScreen> {
   }
 
   _floatingButton() {
-    return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.symmetric(horizontal: 15),
-      height: 50,
-      decoration: BoxDecoration(
-          color: ColorConstants.themeColor,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: ColorConstants.themeColor.withOpacity(.3),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: Offset(0, 3))
-          ]),
-      child: Text(
-        "Continue",
-        style: TextDecoration.containerLabel
-            .copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+    return InkWell(
+      onTap: (){
+        showDialog(context: context, builder: (context)=>AlertDialog(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          content: Center(child: CircularProgressIndicator()),
+        ));
+        Controller().inviteTeam(email: emailController.value.text, role: findRoleId(adminController.value.text)).then((value) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.message!)));
+        });
+
+      },
+      child: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        height: 50,
+        decoration: BoxDecoration(
+            color: ColorConstants.themeColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                  color: ColorConstants.themeColor.withOpacity(.3),
+                  spreadRadius: 2,
+                  blurRadius: 4,
+                  offset: Offset(0, 3))
+            ]),
+        child: Text(
+          "Continue",
+          style: TextDecoration.containerLabel
+              .copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
       ),
     );
+  }
+
+  findRoleId<int>(role){
+    switch(role){
+      case "Admin":
+        return 1;
+      case "Approver":
+        return 2;
+      case "Preparer":
+        return 3;
+      case "Viewer":
+        return 4;
+      case "Employee":
+        return 5;
+    }
   }
 }

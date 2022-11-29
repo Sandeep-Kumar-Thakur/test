@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:team_invite/invite_list/invite_list_screen.dart';
+import 'package:team_invite/controller/controller.dart';
+
+import 'invite_list/invite_list_screen.dart';
+
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -14,9 +18,15 @@ class _SplashState extends State<Splash> {
 
   @override
   void initState() {
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>InviteListScreen()));
+    Controller().getTeamAndInviteList().then((value) {
+      log(value.toJson().toString());
+      if(value.errorFlag=="SUCCESS"){
+        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>InviteListScreen(teamList: value,)));
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Check Token")));
+      }
     });
+
     // TODO: implement initState
     super.initState();
   }
