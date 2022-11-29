@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         bottomAppBarColor: colorCustom,
         scaffoldBackgroundColor: ColorConstants.backgroundColor,
         bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor:  ColorConstants.blueColor,
+          backgroundColor:  ColorConstants.backgroundColor,
         )
       ),
       darkTheme: ThemeData(

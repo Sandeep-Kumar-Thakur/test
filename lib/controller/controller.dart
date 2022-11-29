@@ -16,31 +16,27 @@ class Controller{
     return teamList;
   }
 
-  Future inviteTeam({required String email,required int role})async{
+  Future inviteTeam({required String email,required int role,context})async{
     var body ={
       "email": email,
       "role": role.toString()
     };
-   return myTryCatch(()async{
-      var response = await http.post(Uri.parse(ApiUrls.inviteFriend),headers: {"authtoken":ApiUrls.token},body:body );
-      log(response.body);
-      InviteModel inviteModel = InviteModel.fromJson(jsonDecode(response.body));
-      return inviteModel;
-    }
-
-    );
-
-  }
-
-
-
-  myTryCatch(Function myFunction){
-    try{
-      return myFunction();
+    log("body --- $body");
+    var response = await http.post(Uri.parse(ApiUrls.inviteFriend),headers: {"authtoken":ApiUrls.token},body:body );
+    log(response.body);
+    InviteModel inviteModel = InviteModel();
+    try {
+      inviteModel = InviteModel.fromJson(jsonDecode(response.body));
     }catch(e){
-       log("Something went wrong");
+      inviteModel.message="Please Update Token at Api file";
     }
+
+    return inviteModel;
   }
+
+
+
+
 
 }
 

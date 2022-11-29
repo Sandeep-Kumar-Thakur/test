@@ -23,7 +23,7 @@ class _SplashState extends State<Splash> {
       if(value.errorFlag=="SUCCESS"){
         Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>InviteListScreen(teamList: value,)));
       }else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Check Token")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Update Token at Api file")));
       }
     });
 

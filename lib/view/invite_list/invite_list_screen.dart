@@ -218,7 +218,11 @@ class _InviteListScreenState extends State<InviteListScreen> {
   _floatingButton() {
     return GestureDetector(
       onTap: () {
-
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => InviteScreen(
+          inviteEmail: widget.teamList.data!.invites![0].email!,
+          role: widget.teamList.data!.invites![0].configName!,
+        )));
       },
       child: Container(
         padding: EdgeInsets.all(15),

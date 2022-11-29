@@ -170,7 +170,7 @@ class _InviteScreenState extends State<InviteScreen> {
               ),
               SizedBox(height: 20,),
               Text("Team roles",style: TextDecoration.subHeader,),
-              SizedBox(height: 10,),
+              SizedBox(height: 30,),
               ListView.separated(
                   shrinkWrap: true,
                   separatorBuilder: (context,i)=>SizedBox(height: 10,),
