@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.team_invite">
-   <application
-        android:label="team_invite"
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:label="Team Invite"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
