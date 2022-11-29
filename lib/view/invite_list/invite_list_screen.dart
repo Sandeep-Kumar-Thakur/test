@@ -10,8 +10,6 @@ import 'invite_screen.dart';
 
 class InviteListScreen extends StatefulWidget {
 
-
-
   TeamList teamList;
 
   InviteListScreen({Key? key, required this.teamList}) : super(key: key);
